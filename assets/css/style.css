@@ -927,14 +927,54 @@ address {
   color: var(--cream-100);
 }
 
+/* The price list is also the service picker: tiers are radios, rows are checkboxes. */
+
+:where(.picker) fieldset {
+  min-inline-size: 0;
+  margin: 0;
+  border: 0;
+}
+
+:where(.picker) legend:not(.visually-hidden) {
+  float: left;
+  width: 100%;
+  padding: 0;
+}
+
+:where(.picker) legend + * {
+  clear: both;
+}
+
+.picker input[type="radio"],
+.picker input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.picker-only,
+.option-check {
+  display: none;
+}
+
+.js .picker-only {
+  display: revert;
+}
+
+.js .option-check {
+  display: grid;
+}
+
 .tiers {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
   margin-top: 2rem;
+  padding: 0;
 }
 
 .tier {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -944,11 +984,50 @@ address {
   border: 1px solid rgb(255 255 255 / 0.08);
   background: rgb(18 21 58 / 0.5);
   text-align: center;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-.tier-featured {
-  border-color: rgb(229 196 112 / 0.5);
-  background: linear-gradient(180deg, rgb(229 196 112 / 0.14), rgb(18 21 58 / 0.5));
+.js .tier {
+  cursor: pointer;
+}
+
+.js .tier:hover {
+  border-color: rgb(229 196 112 / 0.45);
+  transform: translateY(-2px);
+}
+
+.tier:has(input:checked) {
+  border-color: var(--gold-400);
+  background: linear-gradient(180deg, rgb(229 196 112 / 0.2), rgb(18 21 58 / 0.55));
+  box-shadow:
+    0 0 0 1px var(--gold-400),
+    0 18px 40px -20px rgb(229 196 112 / 0.6);
+}
+
+.tier:has(input:checked)::after {
+  content: "✓";
+  position: absolute;
+  top: 0.6rem;
+  right: 0.75rem;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--gold-gradient);
+  color: var(--navy-950);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.tier:has(input:focus-visible),
+.option:has(input:focus-visible) {
+  outline: 2px solid var(--gold-400);
+  outline-offset: 3px;
 }
 
 .tier-size {
@@ -976,6 +1055,24 @@ address {
   color: var(--muted-on-dark);
 }
 
+.tier-clear {
+  margin-top: 1rem;
+  padding: 0.25rem 0;
+  border: 0;
+  background: none;
+  color: var(--muted-on-dark);
+  text-decoration: underline;
+  text-decoration-color: rgb(229 196 112 / 0.5);
+  text-underline-offset: 4px;
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.tier-clear:hover {
+  color: var(--gold-300);
+}
+
 .price-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
@@ -996,38 +1093,319 @@ address {
 
 .price-list {
   margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.price-list > div {
-  display: flex;
-  align-items: baseline;
-  gap: 0.75rem;
-  padding: 0.7rem 0;
-}
-
-.price-list > div + div {
+.price-list li + li {
   border-top: 1px solid rgb(255 255 255 / 0.07);
 }
 
-.price-list dt {
+.option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 -0.75rem;
+  padding: 0.7rem 0.75rem;
+  border-radius: var(--radius-sm);
+  transition: background-color 0.2s ease;
+}
+
+.js .option {
+  cursor: pointer;
+}
+
+.js .option:hover {
+  background: rgb(229 196 112 / 0.07);
+}
+
+.option-check {
+  flex: none;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border: 1.5px solid rgb(229 196 112 / 0.6);
+  border-radius: 6px;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.option-check::after {
+  content: "";
+  width: 6px;
+  height: 11px;
+  margin-top: -2px;
+  border: solid var(--navy-950);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) scale(0);
+  transition: transform 0.15s ease;
+}
+
+.option:has(input:checked) .option-check {
+  border-color: var(--gold-400);
+  background: var(--gold-gradient);
+}
+
+.option:has(input:checked) .option-check::after {
+  transform: rotate(45deg) scale(1);
+}
+
+.option-name {
   flex: 1;
   display: flex;
   align-items: baseline;
   gap: 0.75rem;
 }
 
-.price-list dt::after {
+.option-name::after {
   content: "";
   flex: 1;
   border-bottom: 1px dotted rgb(229 196 112 / 0.35);
   transform: translateY(-4px);
 }
 
-.price-list dd {
-  margin: 0;
+.option:has(input:checked) .option-name {
+  color: var(--gold-300);
+}
+
+.option-price {
   font-weight: 600;
   color: var(--gold-300);
   white-space: nowrap;
+}
+
+/* Services already part of the chosen Komplettpflege */
+.option:has(input:disabled) {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.js .option:has(input:disabled):hover {
+  background: none;
+}
+
+.option:has(input:disabled) .option-check {
+  border-style: dashed;
+}
+
+.option:has(input:disabled) .option-price {
+  font-weight: 500;
+  font-style: italic;
+  color: var(--muted-on-dark);
+}
+
+/* ---------- Picker summary ---------- */
+
+.summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(1.75rem, 4vw, 3.5rem);
+  margin-top: 1.75rem;
+  border-color: rgb(229 196 112 / 0.45);
+  background:
+    radial-gradient(600px 300px at 0% 0%, rgb(229 196 112 / 0.1), transparent 70%),
+    linear-gradient(180deg, rgb(48 54 114 / 0.6), rgb(26 30 75 / 0.6));
+  scroll-margin-top: calc(var(--header-h) + 1rem);
+}
+
+.summary[hidden] {
+  display: none;
+}
+
+.summary h3 {
+  font-size: 2rem;
+}
+
+.summary-empty {
+  color: var(--muted-on-dark);
+}
+
+.summary-list {
+  margin: 0 0 1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.summary-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid rgb(255 255 255 / 0.07);
+}
+
+.summary-list li span:last-child {
+  color: var(--gold-300);
+  white-space: nowrap;
+}
+
+.summary-total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 0.5rem;
+}
+
+.summary-total span {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--muted-on-dark);
+}
+
+.summary-total strong {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 5vw, 2.75rem);
+  font-weight: 600;
+  line-height: 1.1;
+  font-variant-numeric: lining-nums;
+  color: var(--gold-400);
+}
+
+.summary-note {
+  margin: 0.75rem 0 0;
+  font-size: 0.85rem;
+  color: var(--muted-on-dark);
+}
+
+.summary-side {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.field em {
+  font-style: normal;
+  font-weight: 400;
+  color: var(--muted-on-dark);
+}
+
+.field input {
+  min-height: 48px;
+  padding: 0.6rem 0.95rem;
+  border: 1px solid rgb(229 196 112 / 0.3);
+  border-radius: var(--radius-sm);
+  background: rgb(18 21 58 / 0.6);
+  color: var(--text-on-dark);
+  font: inherit;
+  font-weight: 400;
+  transition: border-color 0.2s ease;
+}
+
+.field input::placeholder {
+  color: rgb(181 182 204 / 0.55);
+}
+
+.field input:focus {
+  border-color: var(--gold-400);
+  outline: none;
+}
+
+.summary-actions {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.btn-wa {
+  background: linear-gradient(135deg, #3be27a, #1fa855);
+  color: #fff;
+  box-shadow: 0 10px 30px -12px rgb(31 168 85 / 0.7);
+}
+
+.summary-reset {
+  align-self: center;
+  padding: 0.25rem 0;
+  border: 0;
+  background: none;
+  color: var(--muted-on-dark);
+  font: inherit;
+  font-size: 0.85rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.summary-reset:hover {
+  color: var(--gold-300);
+}
+
+@media (max-width: 860px) {
+  .summary {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- Compact price bar ---------- */
+
+.quote-bar {
+  position: fixed;
+  inset: auto 0 0;
+  z-index: 45;
+  padding: 0.75rem 0 calc(0.75rem + env(safe-area-inset-bottom));
+  background: rgb(18 21 58 / 0.94);
+  backdrop-filter: blur(14px);
+  border-top: 1px solid rgb(229 196 112 / 0.3);
+  box-shadow: 0 -12px 30px -12px rgb(0 0 0 / 0.6);
+  animation: slide-up 0.3s ease-out both;
+}
+
+.quote-bar[hidden] {
+  display: none;
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+.quote-bar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.quote-bar-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.quote-bar-text small {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted-on-dark);
+}
+
+.quote-bar-text strong {
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
+  font-weight: 600;
+  font-variant-numeric: lining-nums;
+  color: var(--gold-400);
+}
+
+/* the floating WhatsApp button would sit on top of the bar */
+.quote-bar-visible .fab-wa {
+  display: none;
 }
 
 .notes {
@@ -1080,7 +1458,12 @@ address {
   .tier {
     flex-direction: row;
     justify-content: space-between;
-    padding: 1rem 1.25rem;
+    padding: 1rem 3rem 1rem 1.25rem;
+  }
+
+  .tier:has(input:checked)::after {
+    top: 50%;
+    transform: translateY(-50%);
   }
 }
 
@@ -1255,6 +1638,31 @@ address {
   .contact-action {
     display: none;
   }
+}
+
+.contact-selection {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  max-width: 760px;
+  margin: 0 auto 2rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid rgb(229 196 112 / 0.35);
+  border-radius: var(--radius-sm);
+  background: rgb(229 196 112 / 0.08);
+}
+
+.contact-selection[hidden] {
+  display: none;
+}
+
+.contact-selection .icon {
+  margin-top: 0.2rem;
+  color: var(--gold-400);
+}
+
+.contact-selection strong {
+  color: var(--gold-300);
 }
 
 /* ---------- Footer ---------- */

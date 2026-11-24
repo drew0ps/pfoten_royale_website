@@ -29,8 +29,14 @@ Opening `index.html` directly from disk also works, except for the icons (browse
 
 - **Prices, texts, opening hours**: edit `index.html`; every section is marked with a `<!-- === ... === -->`
   comment.
-- **Phone / WhatsApp / e-mail**: search `index.html` for `41765246598` and `pfotenroyale@gmail.com`. The
-  WhatsApp links use `https://wa.me/41765246598` with a pre-filled German greeting.
+- **Prices and the service picker**: the Preise section is also the price calculator. Each option has its
+  price in `data-min` / `data-max` (leave out `data-max` for "ab …" prices), the text that goes into the
+  WhatsApp / e-mail message in `data-label`, and `data-included` if it is part of the Komplettpflege. Update
+  the visible price text next to it as well; the calculator, the summary and the message links follow
+  automatically.
+- **Phone / WhatsApp / e-mail**: search `index.html` and `assets/js/main.js` for `41765246598` and
+  `pfotenroyale@gmail.com`. The WhatsApp links use `https://wa.me/41765246598` with a pre-filled German
+  greeting.
 - **Gallery photos**: put a JPEG (about 900×1200, under ~200 KB) in `assets/img/gallery/` and copy one of the
   `<li class="gallery-item">` blocks. Keep the `data-index` values sequential (0, 1, 2, …).
 - **Online booking (later)**: there is a comment in the `#kontakt` section marking where to drop a booking
