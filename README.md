@@ -1,8 +1,8 @@
 # Pfoten Royale am See
 
 Website for **Pfoten Royale am See**, a dog grooming salon in Meilen. A plain static site (HTML, CSS, a little
-JavaScript) hosted on GitHub Pages: no build step, no framework, no third-party requests (fonts are
-self-hosted).
+JavaScript) hosted on GitHub Pages at **https://pfotenroyale.ch**: no build step, no framework, no third-party
+requests (fonts are self-hosted).
 
 ## Structure
 
@@ -56,8 +56,6 @@ Pages serves the `main` branch from the repository root. Every push to `main` is
 
 3. Optional: transfer the domain itself away from Wix to a registrar of your choice (Wix: **Domains → ⋯ →
    Transfer away from Wix** gives you the authorisation code). The DNS records above stay the same.
-4. Once the domain works, update `og:image` in `index.html` to an absolute URL
-   (`https://<domain>/assets/img/og-image.jpg`) so link previews show the logo.
 
 ## Credits
 
