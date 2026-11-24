@@ -1403,8 +1403,8 @@ address {
   color: var(--gold-400);
 }
 
-/* the floating WhatsApp button would sit on top of the bar */
-.quote-bar-visible .fab-wa {
+/* the floating buttons would sit on top of the bar */
+.quote-bar-visible .fab-group {
   display: none;
 }
 
@@ -1708,31 +1708,52 @@ address {
   color: rgb(181 182 204 / 0.65);
 }
 
-/* ---------- Floating WhatsApp ---------- */
+/* ---------- Floating Instagram + WhatsApp ---------- */
 
-.fab-wa {
+.fab-group {
   position: fixed;
   right: 1.25rem;
   bottom: 1.25rem;
   z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.fab {
   display: grid;
   place-items: center;
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #3be27a, #1fa855);
   color: #fff;
-  box-shadow: 0 12px 30px -8px rgb(31 168 85 / 0.6);
   transition: transform 0.2s ease;
 }
 
-.fab-wa:hover {
+.fab:hover {
   transform: scale(1.08);
 }
 
-.fab-wa .icon {
+.fab .icon {
   width: 30px;
   height: 30px;
+}
+
+.fab-wa {
+  background: linear-gradient(135deg, #3be27a, #1fa855);
+  box-shadow: 0 12px 30px -8px rgb(31 168 85 / 0.6);
+}
+
+.fab-ig {
+  width: 52px;
+  height: 52px;
+  background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285aeb 90%);
+  box-shadow: 0 12px 30px -8px rgb(214 36 159 / 0.55);
+}
+
+.fab-ig .icon {
+  width: 26px;
+  height: 26px;
 }
 
 /* ---------- Scroll reveal ---------- */
